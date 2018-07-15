@@ -1,26 +1,23 @@
 <?php
-/**
- * Plugin Name: St. Disable updates
- * Plugin URI: http://www.softrest.ru/
- * Description: Disable updates for speedup reason.
- * Version: 1.4
- * Author: softrest
- * Author URI: http://www.softrest.ru/
- */
+/*
+Plugin Name: St. Disable updates
+Plugin URI: http://www.softrest.eu/
+Description: Disables update checking to speed up the site.
+Version: 1.5
+Author: softrest
+Author URI: http://www.softrest.eu/
+*/
 
 /*
   Copyright 2015 Softrest ltd. (email: info@softrest.eu)
-
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -34,20 +31,20 @@ register_activation_hook(__FILE__, 'xareInit');
 
 function xareInit()
 {
-    if (version_compare(get_bloginfo('version'), '2.8', '<')) {
-        delete_option('dismissed_update_core');
-        delete_option('update_core');
-        delete_option('update_themes');
-        delete_option('update_plugins');
-    } else {
-        delete_transient('update_core');
-        delete_transient('update_themes');
-        delete_transient('update_plugins');
-    }
+	if (version_compare(get_bloginfo('version'), '2.8', '<')) {
+		delete_option('dismissed_update_core');
+		delete_option('update_core');
+		delete_option('update_themes');
+		delete_option('update_plugins');
+	} else {
+		delete_transient('update_core');
+		delete_transient('update_themes');
+		delete_transient('update_plugins');
+	}
     global $userdata;
-    if (!current_user_can('upgrade_plugins')) {
-        remove_action('admin_notices', 'update_nag', 3);
-    }
+	if (!current_user_can('upgrade_plugins')) {
+		remove_action('admin_notices', 'update_nag', 3);
+	}
 }
 
 remove_action('init', 'wp_version_check');
@@ -92,4 +89,5 @@ add_filter('pre_site_transient_update_themes', create_function('$a', "return nul
 remove_action('load-update-core.php', 'wp_update_plugins');
 remove_action('load-update-core.php', 'wp_update_themes');
 
-//eof
+add_filter( 'auto_update_plugin', create_function( '$a', "return null;" ) );
+add_filter( 'auto_update_theme', create_function( '$a', "return null;" ) );
